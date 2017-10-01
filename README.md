@@ -31,7 +31,7 @@ This project was inspired by [Khroma.co](http://khroma.co/).
   You can press "Favor" or "Gradient" to get your result.
   <br/>
   接著你就可以按 "Favor" 或是 "Gradient" 來查看你的結果。
-  ![](https://raw.githubusercontent.com/lichin-lin/myColor/master/result.gif)
+  ![](https://raw.githubusercontent.com/lichin-lin/myColor/master/result.png)
   > Reminder: Sometime the result of training process of Gradient you will get is a notification, it means my network modal is not good enough to generate the gradient. Sorry, you may need to refresh the page and do the swipe process again. I will improve the modal and fix this error in the future.
 
   <br/>
