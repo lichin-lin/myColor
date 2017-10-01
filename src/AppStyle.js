@@ -41,6 +41,11 @@ export const LikeHateCell = styled.div`
   @media screen and (max-width: 768px) {
     width: calc(${_WIDTH} / 2 - ${_OFFSET});
     height: calc(${_WIDTH} / 2 - ${_OFFSET});
+    > div {
+      > p {
+        font-size: 14px;
+      }
+    }
   }
 `
 
@@ -77,6 +82,28 @@ export const GradientCell = styled.div`
   }
 `
 
+export const MyColorHeader = styled.div`
+  > h1 {
+    margin: 10px 0;
+    margin-top: 50px;
+    font-size: 48px;
+    color: #02142B;
+
+    background: -webkit-linear-gradient(135deg, #f9fc5a, #ed4236);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    @media screen and (max-width: 768px) {
+      margin-top: 10px;
+    }
+  }
+  > p {
+    color: #829cce;
+    margin: 5px 0;
+    background: -webkit-linear-gradient(135deg, #f9d3c2, #ed4236);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+`
 export const passStyle = { background: '#CCC', text: "#646464" };
 export const successStyle = { background: '#0AF', text: "#FFFFFF" };
 export const failStyle = { background: 'tomato', text: "#FFFFFF" };

@@ -1,5 +1,5 @@
 @import url('https://fonts.googleapis.com/css?family=Nunito');
-
+@import url('https://fonts.googleapis.com/css?family=Libre+Barcode+39+Extended+Text');
 * {
   box-sizing: border-box;
   font-family: 'Nunito', sans-serif;
@@ -51,7 +51,7 @@
     height: 500px;
     background: rgb(192, 192, 192);
     border: 10px solid rgb(100, 100, 100);
-    margin: 100px auto 0;
+    margin: 50px auto 0;
     position: relative;
 }
 
@@ -126,7 +126,7 @@
       transform: scale(1);
       width: 80vw;
       height: 80vw;
-      margin: 100px auto 0;
+      margin: 50px auto 0;
   }
   #viewport .card {
       width: 40vw;

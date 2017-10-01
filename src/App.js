@@ -1,14 +1,22 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
 
-import brain from 'brain.js/src';
+import brain from 'brain.js/dist';
 import Swing from 'react-swing';
 import Notifications, {notify} from 'react-notify-toast';
 
 import randomColor from 'randomcolor';
 import chroma from 'chroma-js';
 
-import { Card, ResultCellList, LikeHateCell, GradientCell, passStyle, successStyle, failStyle } from './AppStyle.js';
+import {
+  Card,
+  ResultCellList,
+  LikeHateCell,
+  GradientCell,
+  passStyle,
+  successStyle,
+  failStyle,
+  MyColorHeader } from './AppStyle.js';
 import './App.css';
 
 class App extends Component {
@@ -92,7 +100,6 @@ class App extends Component {
     let likeThreshold = 0.5;
     let hateThreshold = 0.25;
     let FAIL_SAFE = 0;
-    this.show("🔷 Gradient training...", "custom", 3000, passStyle);
     for (let i = 0; i < 40; i++) {
       let colors = randomColor({ count: 2 });
       let fC = chroma(colors[0]).rgb()
@@ -110,7 +117,7 @@ class App extends Component {
         FAIL_SAFE++;
         console.log(FAIL_SAFE, '/10000');
       }
-      if (FAIL_SAFE >= 10000) {
+      if (FAIL_SAFE >= 20000) {
         this.show("😱 出了狀況重整網頁再來一次, refresh the page and do it again!", "custom", -1, failStyle);
         return;
       }
@@ -133,6 +140,10 @@ class App extends Component {
       <div className="App">
         <Notifications />
         <div>
+            <MyColorHeader>
+              <h1>myColor</h1>
+              <p>swipe the cards left or right,<br/> let neural network generate lovely colors for you.</p>
+            </MyColorHeader>
             <div id="viewport">
                 <Swing
                     className="stack"
@@ -176,8 +187,8 @@ class App extends Component {
                     bgColor={cell.color}
                   >
                     <div>
-                      <p>喜歡: {(cell.result.like * 100).toFixed(2)} %</p>
-                      <p>討厭: {(cell.result.hate * 100).toFixed(2)} %</p>
+                      <p>喜歡: {(cell.result.like * 100).toFixed(1)} %</p>
+                      <p>討厭: {(cell.result.hate * 100).toFixed(1)} %</p>
                       <p>color: {cell.color}</p>
                     </div>
                   </LikeHateCell>
