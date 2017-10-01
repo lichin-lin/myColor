@@ -66,7 +66,7 @@ class App extends Component {
     this.setState({
       net: net
     })
-    this.show("🚂 🚂 🚂 Trainning Finish", "custom", 1000, successStyle);
+    this.show("🚂 🚂 🚂 Training Finish", "custom", 1000, successStyle);
   }
 
   likeHateResult () {
@@ -88,6 +88,7 @@ class App extends Component {
   }
 
   GradientResult () {
+    this.show("🔷 Gradient training...", "custom", -1, passStyle);
     let GradientResult = []
     let likeThreshold = 0.5;
     let hateThreshold = 0.25;
