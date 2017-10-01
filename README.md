@@ -3,8 +3,7 @@ This project was inspired by [Khroma.co](http://khroma.co/).
 # myColor
 🚂 generate colors that you really love with neural network
 
-<br/>
-## How to use it
+## How to
 
 ### Step 1: 🎭 pick what you like 🎭
   Swipe the cards left and right just like using Tinder!<br/>
@@ -16,6 +15,7 @@ This project was inspired by [Khroma.co](http://khroma.co/).
   <br/>
   向左代表不喜歡，向右代表喜歡，往上滑則跳過此顏色。作答完 20 張卡片即可開始訓練。
   <br/>
+  ![](https://raw.githubusercontent.com/lichin-lin/myColor/master/swipe.gif)
 ### Step 2: 🚂🚃 Train 🚃🚃🚃
   Just press Train button and wait for 2~3 second.
   <br/>
