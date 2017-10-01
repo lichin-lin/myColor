@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 
 let _WIDTH = '100vw'
+let _DESKTOP = '1024px'
 let _OFFSET = '20px'
 export const Card = styled.div`
   background-color: ${props => props.bgColor ? props.bgColor : 'white'} !important;
@@ -15,8 +16,8 @@ export const ResultCellList = styled.div`
 `
 export const LikeHateCell = styled.div`
   border-radius: 50%;
-  width: calc(${_WIDTH} / 4 - ${_OFFSET});
-  height: calc(${_WIDTH} / 4 - ${_OFFSET});
+  width: calc(${_DESKTOP} / 4 - ${_OFFSET});
+  height: calc(${_DESKTOP} / 4 - ${_OFFSET});
   padding: 20px;
   margin: calc(${_OFFSET} / 2);
   background: ${props => props.bgColor ? props.bgColor : 'grey'};
@@ -45,8 +46,8 @@ export const LikeHateCell = styled.div`
 
 export const GradientCell = styled.div`
   border-radius: 5px;
-  width: calc(${_WIDTH} / 4 - ${_OFFSET});
-  height: calc((${_WIDTH} / 4 - ${_OFFSET}) * 4 / 3);
+  width: calc(${_DESKTOP} / 4 - ${_OFFSET});
+  height: calc((${_DESKTOP} / 4 - ${_OFFSET}) * 4 / 3);
   padding: 20px;
   margin: calc(${_OFFSET} / 2);
   background: linear-gradient(

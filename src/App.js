@@ -88,11 +88,11 @@ class App extends Component {
   }
 
   GradientResult () {
-    this.show("🔷 Gradient training...", "custom", -1, passStyle);
     let GradientResult = []
     let likeThreshold = 0.5;
     let hateThreshold = 0.25;
     let FAIL_SAFE = 0;
+    this.show("🔷 Gradient training...", "custom", 3000, passStyle);
     for (let i = 0; i < 40; i++) {
       let colors = randomColor({ count: 2 });
       let fC = chroma(colors[0]).rgb()
@@ -178,6 +178,7 @@ class App extends Component {
                     <div>
                       <p>喜歡: {(cell.result.like * 100).toFixed(2)} %</p>
                       <p>討厭: {(cell.result.hate * 100).toFixed(2)} %</p>
+                      <p>color: {cell.color}</p>
                     </div>
                   </LikeHateCell>
                 ) : null
