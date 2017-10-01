@@ -74,9 +74,9 @@
     align-items: center;
     border: 5px solid rgb(100, 100, 100);
     border-radius: 50px;
-    padding: 20px 50px;
+    padding: 15px 40px;
     font-weight: lighter;
-    color: rgb(100, 100, 100); font-weight: bold; font: normal 36px/24px 'Helvetica Neue', Helvetica, Arial, freesans, sans-serif; margin: 0 5px; cursor: pointer; outline: none; position: relative;
+    color: rgb(100, 100, 100); font-weight: bold; font: normal 30px/24px 'Helvetica Neue', Helvetica, Arial, freesans, sans-serif; margin: 0 5px; cursor: pointer; outline: none; position: relative;
 }
 .control button p {
   margin: 0 10px;

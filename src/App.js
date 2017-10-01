@@ -5,55 +5,24 @@ import brain from 'brain.js/src';
 import Swing from 'react-swing';
 import Notifications, {notify} from 'react-notify-toast';
 
-import styled from 'styled-components';
 import randomColor from 'randomcolor';
 import chroma from 'chroma-js';
 
+import { Card, ResultCellList, LikeHateCell, GradientCell} from './AppStyle.js';
 import './App.css';
 
-const Card = styled.div`
-  background-color: ${props => props.bgColor ? props.bgColor : 'white'} !important;
-`
-
-const ResultCubeList = styled.div`
-  display: flex;
-  width: 660px;
-  height: auto;
-  flex-wrap: wrap;
-`
-const ResultCube = styled.div`
-  border-radius: 50%;
-  width: 200px;
-  height: 200px;
-  padding: 20px;
-  margin: 10px;
-  background: ${props => props.bgColor ? props.bgColor : 'grey'};
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  > div {
-    border-radius: 5px;
-    width: 90%;
-    height: auto;
-    padding: 5px;
-    background: rgba(255, 255, 255, 0.5);
-    color: #50514F;
-    > p {
-      font-size: 15px;
-      font-weight: bold;
-      margin: 2.5px 0;
-    }
-  }
-`
 class App extends Component {
   constructor(props, context) {
       super(props, context);
       this.state = {
           stack: null,
           trainData: [],
-          testResult: [],
-          colorList: randomColor({count: 20, hue: 'light'})
+          likeHateResult: [],
+          showLikeHate: false,
+          GradientResult: [],
+          showGradient: false,
+          colorList: randomColor({count: 20, hue: 'light'}),
+          net: ''
       };
   }
   toggleData (e) {
@@ -96,18 +65,63 @@ class App extends Component {
     console.log('blue: ', net.run({ r: 0/255, g: 77/255, b: 218/255 }));
     console.log('red: ', net.run({ r: 255/255, g: 130/255, b: 130/255 }));
 
+    this.setState({
+      net: net
+    })
+    let myColor = { background: '#6fe8a7', text: "#FFFFFF" };
+    notify.show("🚂 🚂 🚂 Trainning Finish", "custom", 1000, myColor);
+  }
+  likeHateResult () {
     let testData = randomColor({ count: 100 });
-    let testResult = []
+    let likeHateResult = []
     for (let i = 0; i < testData.length; i++) {
       let color = chroma(testData[i]).rgb();
-      testResult.push({
+      likeHateResult.push({
         color: testData[i],
-        result: net.run({ r: color[0]/255, g: color[1]/255, b: color[2]/255 })
+        result: this.state.net.run({ r: color[0]/255, g: color[1]/255, b: color[2]/255 })
       })
     }
-    console.log(testResult);
     this.setState({
-      testResult: testResult
+      likeHateResult: likeHateResult,
+      showLikeHate: true,
+      showGradient: false,
+    })
+  }
+  GradientResult () {
+    let GradientResult = []
+    let gradientThreshold = 0.5;
+    let FAIL_SAFE = 0;
+    for (let i = 0; i < 40; i++) {
+      let colors = randomColor({ count: 2 });
+      let fC = chroma(colors[0]).rgb()
+      let sC = chroma(colors[1]).rgb()
+      while (
+        (this.state.net.run({ r: fC[0]/255, g: fC[1]/255, b: fC[2]/255 }).like < gradientThreshold ||
+        this.state.net.run({ r: sC[0]/255, g: sC[1]/255, b: sC[2]/255 }).like < gradientThreshold) &&
+        FAIL_SAFE < 10000
+      ) {
+        let tryColors = randomColor({ count: 2 });
+        fC = chroma(tryColors[0]).rgb();
+        sC = chroma(tryColors[1]).rgb();
+        FAIL_SAFE++;
+        console.log(FAIL_SAFE);
+      }
+      if (FAIL_SAFE >= 10000) {
+        let myColor = { background: 'tomato', text: "#FFFFFF" };
+        notify.show("😱 pick more!", "custom", 1000, myColor);
+        return;
+      }
+      GradientResult.push({
+        firstColor: chroma(fC).hex(),
+        secondColor: chroma(sC).hex(),
+        firstColorResult: this.state.net.run({ r: fC[0]/255, g: fC[1]/255, b: fC[2]/255 }),
+        secondColorResult: this.state.net.run({ r: sC[0]/255, g: sC[1]/255, b: sC[2]/255 })
+      })
+    }
+    this.setState({
+      GradientResult: GradientResult,
+      showLikeHate: false,
+      showGradient: true
     })
   }
   render() {
@@ -138,28 +152,52 @@ class App extends Component {
             </div>
             <div className="control">
                 <button type="button" onClick={this.startTrain.bind(this)}>
+                  <span role="img" aria-label="train">🚂</span><span role="img" aria-label="train">🚂</span><span role="img" aria-label="train">🚂</span>
                   <p>Train</p>
-                  <span role="img">🚂</span><span role="img">🚂</span><span role="img">🚂</span>
+                </button>
+                <button type="button" onClick={this.likeHateResult.bind(this)}>
+                  <p><span role="img" aria-label="like">👍</span> / <span role="img" aria-label="hate">👎</span> Favor</p>
+                </button>
+                <button type="button" onClick={this.GradientResult.bind(this)}>
+                  <p><span role="img" aria-label="gradient">🔷</span> Gradient</p>
                 </button>
             </div>
-            <ResultCubeList>
+            <ResultCellList>
               {
-                _.map(
-                  _.sortBy(this.state.testResult, (item) => {
+                this.state.showLikeHate
+                ? _.map(
+                  _.sortBy(this.state.likeHateResult, (item) => {
                     return item.result.like
-                  }).reverse(), (cube, id) =>
-                  <ResultCube
+                  }).reverse(), (cell, id) =>
+                  <LikeHateCell
                     key={id}
-                    bgColor={cube.color}
+                    bgColor={cell.color}
                   >
                     <div>
-                      <p>喜歡: {(cube.result.like * 100).toFixed(2)} %</p>
-                      <p>討厭: {(cube.result.hate * 100).toFixed(2)} %</p>
+                      <p>喜歡: {(cell.result.like * 100).toFixed(2)} %</p>
+                      <p>討厭: {(cell.result.hate * 100).toFixed(2)} %</p>
                     </div>
-                  </ResultCube>
-                )
+                  </LikeHateCell>
+                ) : null
               }
-            </ResultCubeList>
+            </ResultCellList>
+            <ResultCellList>
+              {
+                this.state.showGradient
+                ? _.map(this.state.GradientResult, (cell, id) =>
+                  <GradientCell
+                    key={id}
+                    bgColorFirst={cell.firstColor}
+                    bgColorSecond={cell.secondColor}
+                  >
+                    <div>
+                      <p><span role="img" aria-label="first">☝️</span> color: {cell.firstColor}</p>
+                      <p><span role="img" aria-label="second">✌️</span> color: {cell.secondColor}</p>
+                    </div>
+                  </GradientCell>
+                ) : null
+              }
+            </ResultCellList>
         </div>
       </div>
     );
