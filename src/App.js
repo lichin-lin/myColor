@@ -162,7 +162,7 @@ class App extends Component {
               <h1>myColor</h1>
               <p>swipe the cards left or right,<br/> let neural network generate lovely colors for you.</p>
               <div>
-                <p>使用說明 docs</p>
+                <a href="https://github.com/lichin-lin/myColor#how-to" target="_blank"><p>使用說明 docs</p></a>
               <GitHubButton type="stargazers" size="large" namespace="lichin-lin" repo="myColor" />
               </div>
             </MyColorHeader>

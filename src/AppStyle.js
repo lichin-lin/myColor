@@ -111,7 +111,12 @@ export const MyColorHeader = styled.div`
   > div {
     display: flex;
     align-items: center;
+    a {
+      text-decoration: none;
+      color: #50514F;
+    }
     p {
+      color: #50514F;
       cursor: pointer;
       border-radius: 10px;
       margin-right: 10px;
