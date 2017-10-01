@@ -53,7 +53,7 @@ class App extends Component {
           stack: null,
           trainData: [],
           testResult: [],
-          colorList: randomColor({count: 10, hue: 'light'})
+          colorList: randomColor({count: 20, hue: 'light'})
       };
   }
   toggleData (e) {
@@ -80,12 +80,18 @@ class App extends Component {
     console.log(this.state.trainData);
     var net = new brain.NeuralNetwork();
 
-    net.train(this.state.trainData, {
+    net.train([
+      {input: { r: 255/255, g: 165/255, b: 0 }, output: {like: 0, hate: 0}},  // orange
+      {input: { r: 255/255, g: 255/255, b: 0/255 }, output: {like: 0, hate: 0}},  // yellow
+      {input: { r: 0/255, g: 128/255, b: 0/255 }, output: {like: 0, hate: 0}},  // green
+      {input: { r: 0/255, g: 255/255, b: 255/255 }, output: {like: 0, hate: 0}},  // cyan
+      {input: { r: 0/255, g: 0/255, b: 255/255 }, output: {like: 0, hate: 0}},  // blue
+      {input: { r: 238/255, g: 130/255, b: 238/255 }, output: {like: 0, hate: 0}},  // violet
+      {input: { r: 255/255, g: 0/255, b: 255/255 }, output: {like: 0, hate: 0}},  // magenta
+      {input: { r: 255/255, g: 0/255, b: 0/255 }, output: {like: 0, hate: 0}},  // red
+    ].concat(this.state.trainData), {
       // log: true
     });
-
-    console.log('black: ', net.run({ r: 0, g: 0, b: 0 }));
-    console.log('white: ', net.run({ r: 1, g: 1, b: 1 }));
     console.log('green: ', net.run({ r: 158/255, g: 247/255, b: 158/255 }));
     console.log('blue: ', net.run({ r: 0/255, g: 77/255, b: 218/255 }));
     console.log('red: ', net.run({ r: 255/255, g: 130/255, b: 130/255 }));
