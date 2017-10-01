@@ -83,10 +83,14 @@ export const GradientCell = styled.div`
 `
 
 export const MyColorHeader = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
   > h1 {
     margin: 10px 0;
     margin-top: 50px;
-    font-size: 48px;
+    font-size: 60px;
     color: #02142B;
 
     background: -webkit-linear-gradient(135deg, #f9fc5a, #ed4236);
@@ -99,11 +103,33 @@ export const MyColorHeader = styled.div`
   > p {
     color: #829cce;
     margin: 5px 0;
-    background: -webkit-linear-gradient(135deg, #f9d3c2, #ed4236);
+    background: -webkit-linear-gradient(135deg, #f9fc5a, #ed4236);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+  }
+
+  > div {
+    display: flex;
+    align-items: center;
+    p {
+      cursor: pointer;
+      border-radius: 10px;
+      margin-right: 10px;
+      padding: 5px 15px;
+      border: 5px solid #DDD;
+    }
   }
 `
 export const passStyle = { background: '#CCC', text: "#646464" };
 export const successStyle = { background: '#0AF', text: "#FFFFFF" };
 export const failStyle = { background: 'tomato', text: "#FFFFFF" };
+export const customStyles = {
+  content : {
+    top                   : '50%',
+    left                  : '50%',
+    right                 : 'auto',
+    bottom                : 'auto',
+    marginRight           : '-50%',
+    transform             : 'translate(-50%, -50%)'
+  }
+};

@@ -16,7 +16,10 @@ import {
   passStyle,
   successStyle,
   failStyle,
+  customStyles,
   MyColorHeader } from './AppStyle.js';
+import GitHubButton from 'react-github-button'
+import 'react-github-button/assets/style.css'
 import './App.css';
 
 class App extends Component {
@@ -31,8 +34,22 @@ class App extends Component {
           GradientResult: [],
           showGradient: false,
           colorList: randomColor({count: 20}),
-          net: ''
+          net: '',
+          modalIsOpen: false
       };
+      this.openModal = this.openModal.bind(this);
+      this.afterOpenModal = this.afterOpenModal.bind(this);
+      this.closeModal = this.closeModal.bind(this);
+  }
+  openModal() {
+    this.setState({modalIsOpen: true});
+  }
+
+  afterOpenModal() {
+    this.subtitle.style.color = '#f00';
+  }
+  closeModal() {
+    this.setState({modalIsOpen: false});
   }
   toggleData (e) {
     console.log('card throwout', e.target.classList[1])
@@ -53,28 +70,29 @@ class App extends Component {
     this.state.trainData.push(_data);
   }
   startTrain () {
-    var net = new brain.NeuralNetwork();
+    if (this.state.trainData.length < 5) {
+      this.show('再多滑幾張增加準確度, swipe more for better result', "custom", 3000, passStyle);
+      return;
+    } else {
+      var net = new brain.NeuralNetwork();
 
-    net.train([
-      {input: { r: 255/255, g: 165/255, b: 0 }, output: {like: 0, hate: 0}},  // orange
-      {input: { r: 255/255, g: 255/255, b: 0/255 }, output: {like: 0, hate: 0}},  // yellow
-      {input: { r: 0/255, g: 128/255, b: 0/255 }, output: {like: 0, hate: 0}},  // green
-      {input: { r: 0/255, g: 255/255, b: 255/255 }, output: {like: 0, hate: 0}},  // cyan
-      {input: { r: 0/255, g: 0/255, b: 255/255 }, output: {like: 0, hate: 0}},  // blue
-      {input: { r: 238/255, g: 130/255, b: 238/255 }, output: {like: 0, hate: 0}},  // violet
-      {input: { r: 255/255, g: 0/255, b: 255/255 }, output: {like: 0, hate: 0}},  // magenta
-      {input: { r: 255/255, g: 0/255, b: 0/255 }, output: {like: 0, hate: 0}},  // red
-    ].concat(this.state.trainData), {
-      // log: true
-    });
-    console.log('green: ', net.run({ r: 158/255, g: 247/255, b: 158/255 }));
-    console.log('blue: ', net.run({ r: 0/255, g: 77/255, b: 218/255 }));
-    console.log('red: ', net.run({ r: 255/255, g: 130/255, b: 130/255 }));
-
-    this.setState({
-      net: net
-    })
-    this.show("🚂 🚂 🚂 Training Finish", "custom", 1000, successStyle);
+      net.train([
+        {input: { r: 255/255, g: 165/255, b: 0 }, output: {like: 0, hate: 0}},  // orange
+        {input: { r: 255/255, g: 255/255, b: 0/255 }, output: {like: 0, hate: 0}},  // yellow
+        {input: { r: 0/255, g: 128/255, b: 0/255 }, output: {like: 0, hate: 0}},  // green
+        {input: { r: 0/255, g: 255/255, b: 255/255 }, output: {like: 0, hate: 0}},  // cyan
+        {input: { r: 0/255, g: 0/255, b: 255/255 }, output: {like: 0, hate: 0}},  // blue
+        {input: { r: 238/255, g: 130/255, b: 238/255 }, output: {like: 0, hate: 0}},  // violet
+        {input: { r: 255/255, g: 0/255, b: 255/255 }, output: {like: 0, hate: 0}},  // magenta
+        {input: { r: 255/255, g: 0/255, b: 0/255 }, output: {like: 0, hate: 0}},  // red
+      ].concat(this.state.trainData), {
+        // log: true
+      });
+      this.setState({
+        net: net
+      })
+      this.show("🚂 🚂 🚂 Training Finish", "custom", 1000, successStyle);
+    }
   }
 
   likeHateResult () {
@@ -143,6 +161,10 @@ class App extends Component {
             <MyColorHeader>
               <h1>myColor</h1>
               <p>swipe the cards left or right,<br/> let neural network generate lovely colors for you.</p>
+              <div>
+                <p>使用說明 docs</p>
+              <GitHubButton type="stargazers" size="large" namespace="lichin-lin" repo="myColor" />
+              </div>
             </MyColorHeader>
             <div id="viewport">
                 <Swing
