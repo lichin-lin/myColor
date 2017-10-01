@@ -8,12 +8,13 @@ import Notifications, {notify} from 'react-notify-toast';
 import randomColor from 'randomcolor';
 import chroma from 'chroma-js';
 
-import { Card, ResultCellList, LikeHateCell, GradientCell} from './AppStyle.js';
+import { Card, ResultCellList, LikeHateCell, GradientCell, passStyle, successStyle, failStyle } from './AppStyle.js';
 import './App.css';
 
 class App extends Component {
   constructor(props, context) {
       super(props, context);
+      this.show = notify.createShowQueue();
       this.state = {
           stack: null,
           trainData: [],
@@ -21,7 +22,7 @@ class App extends Component {
           showLikeHate: false,
           GradientResult: [],
           showGradient: false,
-          colorList: randomColor({count: 20, hue: 'light'}),
+          colorList: randomColor({count: 20}),
           net: ''
       };
   }
@@ -34,19 +35,16 @@ class App extends Component {
     };
     if (e.throwDirection === Swing.DIRECTION.LEFT) {
       _data.output.hate = 1;
-      let myColor = { background: 'tomato', text: "#FFFFFF" };
-      notify.show("😱 不喜翻 bye", "custom", 1000, myColor);
+      this.show("😱 不喜翻 bye", "custom", 1000, failStyle);
     } else if (e.throwDirection === Swing.DIRECTION.RIGHT) {
       _data.output.like = 1;
-      let myColor = { background: '#0AF', text: "#FFFFFF" };
-      notify.show("🚀 喜翻 like", "custom", 1000, myColor);
+      this.show("🚀 喜翻 like", "custom", 1000, successStyle);
     } else {
-      // pass
+      this.show('跳過 pass', "custom", 1000, passStyle);
     }
     this.state.trainData.push(_data);
   }
   startTrain () {
-    console.log(this.state.trainData);
     var net = new brain.NeuralNetwork();
 
     net.train([
@@ -68,9 +66,9 @@ class App extends Component {
     this.setState({
       net: net
     })
-    let myColor = { background: '#6fe8a7', text: "#FFFFFF" };
-    notify.show("🚂 🚂 🚂 Trainning Finish", "custom", 1000, myColor);
+    this.show("🚂 🚂 🚂 Trainning Finish", "custom", 1000, successStyle);
   }
+
   likeHateResult () {
     let testData = randomColor({ count: 100 });
     let likeHateResult = []
@@ -86,29 +84,33 @@ class App extends Component {
       showLikeHate: true,
       showGradient: false,
     })
+    this.show("like/hate 訓練結束", "custom", 3000, successStyle);
   }
+
   GradientResult () {
     let GradientResult = []
-    let gradientThreshold = 0.5;
+    let likeThreshold = 0.5;
+    let hateThreshold = 0.25;
     let FAIL_SAFE = 0;
     for (let i = 0; i < 40; i++) {
       let colors = randomColor({ count: 2 });
       let fC = chroma(colors[0]).rgb()
       let sC = chroma(colors[1]).rgb()
       while (
-        (this.state.net.run({ r: fC[0]/255, g: fC[1]/255, b: fC[2]/255 }).like < gradientThreshold ||
-        this.state.net.run({ r: sC[0]/255, g: sC[1]/255, b: sC[2]/255 }).like < gradientThreshold) &&
-        FAIL_SAFE < 10000
+        FAIL_SAFE < 10000 &&
+        (this.state.net.run({ r: fC[0]/255, g: fC[1]/255, b: fC[2]/255 }).like < likeThreshold ||
+        this.state.net.run({ r: sC[0]/255, g: sC[1]/255, b: sC[2]/255 }).like < likeThreshold) ||
+        (this.state.net.run({ r: fC[0]/255, g: fC[1]/255, b: fC[2]/255 }).hate > hateThreshold ||
+        this.state.net.run({ r: sC[0]/255, g: sC[1]/255, b: sC[2]/255 }).hate > hateThreshold)
       ) {
         let tryColors = randomColor({ count: 2 });
         fC = chroma(tryColors[0]).rgb();
         sC = chroma(tryColors[1]).rgb();
         FAIL_SAFE++;
-        console.log(FAIL_SAFE);
+        console.log(FAIL_SAFE, '/10000');
       }
       if (FAIL_SAFE >= 10000) {
-        let myColor = { background: 'tomato', text: "#FFFFFF" };
-        notify.show("😱 pick more!", "custom", 1000, myColor);
+        this.show("😱 出了狀況重整網頁再來一次, refresh the page and do it again!", "custom", -1, failStyle);
         return;
       }
       GradientResult.push({
@@ -123,6 +125,7 @@ class App extends Component {
       showLikeHate: false,
       showGradient: true
     })
+    this.show("Gradient 訓練結束", "custom", 3000, successStyle);
   }
   render() {
     return (
@@ -134,9 +137,7 @@ class App extends Component {
                     className="stack"
                     tagName="div"
                     setStack={(stack)=> this.setState({stack:stack})}
-                    ref="stack"
-                    // throwout={(e)=>console.log('throwout',e)}
-                >
+                    ref="stack">
                   {
                     _.map(this.state.colorList, (color, id) =>
                       <Card
@@ -152,8 +153,8 @@ class App extends Component {
             </div>
             <div className="control">
                 <button type="button" onClick={this.startTrain.bind(this)}>
-                  <span role="img" aria-label="train">🚂</span><span role="img" aria-label="train">🚂</span><span role="img" aria-label="train">🚂</span>
-                  <p>Train</p>
+                  <span role="img" aria-label="train">🚂</span>
+                <p>Train Colors</p>
                 </button>
                 <button type="button" onClick={this.likeHateResult.bind(this)}>
                   <p><span role="img" aria-label="like">👍</span> / <span role="img" aria-label="hate">👎</span> Favor</p>

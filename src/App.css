@@ -9,8 +9,14 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 100vw;
+  overflow: hidden;
 }
-
+.App > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 .App-logo {
   animation: App-logo-spin infinite 20s linear;
   height: 80px;
@@ -41,21 +47,30 @@
 #viewport {
     transform: scale(0.6);
     border-radius: 5px;
-    width: 500px; height: 500px; background: rgb(192, 192, 192); border: 10px solid rgb(100, 100, 100); margin: 100px auto 0; position: relative;
+    width: 500px;
+    height: 500px;
+    background: rgb(192, 192, 192);
+    border: 10px solid rgb(100, 100, 100);
+    margin: 100px auto 0;
+    position: relative;
 }
-#viewport .stack {
-    width: 200px; height: 300px; background: white; position: absolute; top: 100px; left: 50%; margin-left: -100px; border-radius: 10px;
-}
+
 #viewport .card {
-    width: 200px; height: 300px; list-style: none; background: #fff; border-radius: 5px; position: absolute; top: 0; left: 0; box-shadow: 0 0 2px rgba(0,0,0,.2), 1px 1px 1px rgba(0,0,0,.2); line-height: 300px; text-align: center; font-size: 100px; border: 10px solid #ECECEC; box-sizing: border-box; cursor: default;
-}
-#viewport .clubs,
-#viewport .spades {
-    color: #373737;
-}
-#viewport .diamonds,
-#viewport .hearts {
-    color: #ED5D52;
+    width: 200px;
+    height: 300px;
+    list-style: none;
+    background: #fff;
+    border-radius: 5px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    box-shadow: 0 0 2px rgba(0,0,0,.2), 1px 1px 1px rgba(0,0,0,.2);
+    line-height: 300px;
+    text-align: center;
+    font-size: 100px;
+    border: 10px solid #ECECEC;
+    box-sizing: border-box;
+    cursor: default;
 }
 #viewport .in-deck:nth-child(3) {
     top: 2px; transform: translate(2px, 2px) rotate(0.4deg);
@@ -64,12 +79,14 @@
     top: 4px; transform: translate(-4px, -2px) rotate(-1deg);
 }
 .control {
-    text-align: center; font-size: 0; margin: 20px;
+    width: 100%;
+    text-align: center;
+    font-size: 0;
+    margin: 20px;
     display: flex;
     justify-content: center;
 }
 .control button {
-    /*background: rgb(100, 100, 100);*/
     display: flex;
     align-items: center;
     border: 5px solid rgb(100, 100, 100);
@@ -86,4 +103,60 @@
 }
 .source a {
     color: #C7433E;
+}
+
+/* Notify */
+#notification-wrapper .toast-notification {
+  width: 320px !important;
+  left: 50% !important;
+  transform: translate(-50%, 108px) !important;
+}
+
+#notification-wrapper .toast-notification span {
+  display: block !important;
+  border: 5px solid rgb(100, 100, 100);
+  padding: 20px 10px !important;
+  line-height: 40px;
+  font-size: 20px;
+}
+
+/* SIMPLE RWD */
+@media screen and (max-width: 768px) {
+  #viewport {
+      transform: scale(1);
+      width: 80vw;
+      height: 80vw;
+      margin: 100px auto 0;
+  }
+  #viewport .card {
+      width: 40vw;
+      height: 60vw;
+      position: absolute;
+      top: calc(20vw / 2 - 10px);
+      left: calc(40vw / 2 - 10px);
+  }
+  .control {
+    flex-direction: column;
+    align-items: center;
+  }
+  .control button {
+      width: 50%;
+      max-width: 300px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 10px 0;
+      padding: 5px 20px;
+      font-size: 16px;
+  }
+  /* Notify */
+  #notification-wrapper .toast-notification {
+    width: 300px !important;
+  }
+
+  #notification-wrapper .toast-notification span {
+    padding: 10px 10px !important;
+    line-height: 32px;
+    font-size: 16px;
+  }
 }

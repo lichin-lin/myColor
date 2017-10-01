@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-let _WIDTH = '1024px'
+let _WIDTH = '100vw'
 let _OFFSET = '20px'
 export const Card = styled.div`
   background-color: ${props => props.bgColor ? props.bgColor : 'white'} !important;
@@ -9,6 +9,7 @@ export const Card = styled.div`
 export const ResultCellList = styled.div`
   display: flex;
   width: ${_WIDTH};
+  max-width: 1024px;
   height: auto;
   flex-wrap: wrap;
 `
@@ -35,6 +36,10 @@ export const LikeHateCell = styled.div`
       font-weight: bold;
       margin: 2.5px 0;
     }
+  }
+  @media screen and (max-width: 768px) {
+    width: calc(${_WIDTH} / 2 - ${_OFFSET});
+    height: calc(${_WIDTH} / 2 - ${_OFFSET});
   }
 `
 
@@ -65,4 +70,12 @@ export const GradientCell = styled.div`
       margin: 2.5px 0;
     }
   }
+  @media screen and (max-width: 768px) {
+    width: calc(${_WIDTH} / 2 - ${_OFFSET});
+    height: calc((${_WIDTH} / 2 - ${_OFFSET}) * 4 / 3);
+  }
 `
+
+export const passStyle = { background: '#CCC', text: "#646464" };
+export const successStyle = { background: '#0AF', text: "#FFFFFF" };
+export const failStyle = { background: 'tomato', text: "#FFFFFF" };
