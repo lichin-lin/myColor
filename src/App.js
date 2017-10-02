@@ -16,7 +16,6 @@ import {
   passStyle,
   successStyle,
   failStyle,
-  customStyles,
   MyColorHeader } from './AppStyle.js';
 import GitHubButton from 'react-github-button'
 import 'react-github-button/assets/style.css'
@@ -77,14 +76,14 @@ class App extends Component {
       var net = new brain.NeuralNetwork();
 
       net.train([
-        {input: { r: 255/255, g: 165/255, b: 0 }, output: {like: 0, hate: 0}},  // orange
+        // {input: { r: 255/255, g: 165/255, b: 0 }, output: {like: 0, hate: 0}},  // orange
+        // {input: { r: 238/255, g: 130/255, b: 238/255 }, output: {like: 0, hate: 0}},  // violet
         {input: { r: 255/255, g: 255/255, b: 0/255 }, output: {like: 0, hate: 0}},  // yellow
-        {input: { r: 0/255, g: 128/255, b: 0/255 }, output: {like: 0, hate: 0}},  // green
-        {input: { r: 0/255, g: 255/255, b: 255/255 }, output: {like: 0, hate: 0}},  // cyan
-        {input: { r: 0/255, g: 0/255, b: 255/255 }, output: {like: 0, hate: 0}},  // blue
-        {input: { r: 238/255, g: 130/255, b: 238/255 }, output: {like: 0, hate: 0}},  // violet
         {input: { r: 255/255, g: 0/255, b: 255/255 }, output: {like: 0, hate: 0}},  // magenta
+        {input: { r: 0/255, g: 255/255, b: 255/255 }, output: {like: 0, hate: 0}},  // cyan
+        {input: { r: 0/255, g: 255/255, b: 0/255 }, output: {like: 0, hate: 0}},  // green
         {input: { r: 255/255, g: 0/255, b: 0/255 }, output: {like: 0, hate: 0}},  // red
+        {input: { r: 0/255, g: 0/255, b: 255/255 }, output: {like: 0, hate: 0}},  // blue
       ].concat(this.state.trainData), {
         // log: true
       });

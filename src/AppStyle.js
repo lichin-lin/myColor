@@ -128,13 +128,3 @@ export const MyColorHeader = styled.div`
 export const passStyle = { background: '#CCC', text: "#646464" };
 export const successStyle = { background: '#0AF', text: "#FFFFFF" };
 export const failStyle = { background: 'tomato', text: "#FFFFFF" };
-export const customStyles = {
-  content : {
-    top                   : '50%',
-    left                  : '50%',
-    right                 : 'auto',
-    bottom                : 'auto',
-    marginRight           : '-50%',
-    transform             : 'translate(-50%, -50%)'
-  }
-};
