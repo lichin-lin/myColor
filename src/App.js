@@ -39,7 +39,7 @@ class App extends Component {
           showGradient: false,
           colorSchemaResult: [],
           showColorSchema: false,
-          colorList: randomColor({count: 20}),
+          colorList: randomColor({count: 50}),
           net: '',
           modalIsOpen: false
       };
@@ -162,33 +162,24 @@ class App extends Component {
     this.show("Gradient 訓練結束", "custom", 3000, successStyle);
   }
   colorSchemaResult () {
-    console.log('yo');
     let ColorSchemaResult = []
     let likeThreshold = 0.25;
     let hateThreshold = 0.25;
     let FAIL_SAFE = 0;
-    for (let i = 0; i < 8; i++) {
-      let colors = randomColor({ count: 4 });
+    for (let i = 0; i < 20; i++) {
+      let colors = randomColor({ count: 2 });
       let fC = chroma(colors[0]).rgb()
       let sC = chroma(colors[1]).rgb()
-      let tC = chroma(colors[2]).rgb()
-      let foC = chroma(colors[3]).rgb()
       while (
         FAIL_SAFE < 10000 &&
         (this.state.net.run(colorNetwork(fC)).like < likeThreshold ||
-        this.state.net.run(colorNetwork(sC)).like < likeThreshold ||
-        this.state.net.run(colorNetwork(tC)).like < likeThreshold ||
-        this.state.net.run(colorNetwork(foC)).like < likeThreshold) ||
+        this.state.net.run(colorNetwork(sC)).like < likeThreshold) ||
         (this.state.net.run(colorNetwork(fC)).hate > hateThreshold ||
-        this.state.net.run(colorNetwork(sC)).hate > hateThreshold ||
-        this.state.net.run(colorNetwork(tC)).hate > hateThreshold ||
-        this.state.net.run(colorNetwork(foC)).hate > hateThreshold)
+        this.state.net.run(colorNetwork(sC)).hate > hateThreshold)
       ) {
-        let tryColors = randomColor({ count: 4 });
+        let tryColors = randomColor({ count: 2 });
         fC = chroma(tryColors[0]).rgb();
         sC = chroma(tryColors[1]).rgb();
-        tC = chroma(tryColors[2]).rgb();
-        foC = chroma(tryColors[3]).rgb();
         FAIL_SAFE++;
         console.log(FAIL_SAFE, '/10000');
       }
@@ -196,15 +187,18 @@ class App extends Component {
         this.show("😱 出了狀況重整網頁再來一次, refresh the page and do it again!", "custom", -1, failStyle);
         return;
       }
+      let colorlist = chroma.scale([fC,sC])
+          .mode('lch').colors(4)
+      console.log(colorlist)
       ColorSchemaResult.push({
-        firstColor: chroma(fC).hex(),
-        secondColor: chroma(sC).hex(),
-        thirdColor: chroma(tC).hex(),
-        fourColor: chroma(foC).hex(),
-        firstColorResult: this.state.net.run(colorNetwork(fC)),
-        secondColorResult: this.state.net.run(colorNetwork(sC)),
-        thirdColorResult: this.state.net.run(colorNetwork(tC)),
-        fourColorResult: this.state.net.run(colorNetwork(foC)),
+        firstColor: chroma(colorlist[0]).hex(),
+        secondColor: chroma(colorlist[1]).hex(),
+        thirdColor: chroma(colorlist[2]).hex(),
+        fourColor: chroma(colorlist[3]).hex(),
+        firstColorResult: this.state.net.run(colorNetwork(colorlist[0])),
+        secondColorResult: this.state.net.run(colorNetwork(colorlist[1])),
+        thirdColorResult: this.state.net.run(colorNetwork(colorlist[2])),
+        fourColorResult: this.state.net.run(colorNetwork(colorlist[3]))
       })
     }
     this.setState({
@@ -259,7 +253,7 @@ class App extends Component {
                   <p><span role="img" aria-label="gradient">🔷</span> Gradient</p>
                 </button>
                 <button type="button" onClick={this.colorSchemaResult.bind(this)}>
-                  <p><span role="img" aria-label="colorSchema">🌈</span> colorSchema</p>
+                  <p><span role="img" aria-label="colorSchema">🌈</span> color schema</p>
                 </button>
             </div>
             <ResultCellList>
