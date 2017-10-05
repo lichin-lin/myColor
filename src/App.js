@@ -13,6 +13,7 @@ import {
   ResultCellList,
   LikeHateCell,
   GradientCell,
+  ColorSchemaCell,
   passStyle,
   successStyle,
   failStyle,
@@ -21,6 +22,10 @@ import GitHubButton from 'react-github-button'
 import 'react-github-button/assets/style.css'
 import './App.css';
 
+function colorNetwork(color) {
+  let colorRGB = {r: color[0]/255, g: color[1]/255, b: color[2]/255}
+  return colorRGB
+}
 class App extends Component {
   constructor(props, context) {
       super(props, context);
@@ -32,6 +37,8 @@ class App extends Component {
           showLikeHate: false,
           GradientResult: [],
           showGradient: false,
+          colorSchemaResult: [],
+          showColorSchema: false,
           colorList: randomColor({count: 20}),
           net: '',
           modalIsOpen: false
@@ -95,7 +102,7 @@ class App extends Component {
   }
 
   likeHateResult () {
-    let testData = randomColor({ count: 100 });
+    let testData = randomColor({ count: 40 });
     let likeHateResult = []
     for (let i = 0; i < testData.length; i++) {
       let color = chroma(testData[i]).rgb();
@@ -108,6 +115,7 @@ class App extends Component {
       likeHateResult: likeHateResult,
       showLikeHate: true,
       showGradient: false,
+      showColorSchema: false
     })
     this.show("like/hate 訓練結束", "custom", 3000, successStyle);
   }
@@ -123,10 +131,10 @@ class App extends Component {
       let sC = chroma(colors[1]).rgb()
       while (
         FAIL_SAFE < 10000 &&
-        (this.state.net.run({ r: fC[0]/255, g: fC[1]/255, b: fC[2]/255 }).like < likeThreshold ||
-        this.state.net.run({ r: sC[0]/255, g: sC[1]/255, b: sC[2]/255 }).like < likeThreshold) ||
-        (this.state.net.run({ r: fC[0]/255, g: fC[1]/255, b: fC[2]/255 }).hate > hateThreshold ||
-        this.state.net.run({ r: sC[0]/255, g: sC[1]/255, b: sC[2]/255 }).hate > hateThreshold)
+        (this.state.net.run(colorNetwork(fC)).like < likeThreshold ||
+        this.state.net.run(colorNetwork(sC)).like < likeThreshold) ||
+        (this.state.net.run(colorNetwork(fC)).hate > hateThreshold ||
+        this.state.net.run(colorNetwork(sC)).hate > hateThreshold)
       ) {
         let tryColors = randomColor({ count: 2 });
         fC = chroma(tryColors[0]).rgb();
@@ -148,11 +156,66 @@ class App extends Component {
     this.setState({
       GradientResult: GradientResult,
       showLikeHate: false,
-      showGradient: true
+      showGradient: true,
+      showColorSchema: false
     })
     this.show("Gradient 訓練結束", "custom", 3000, successStyle);
   }
+  colorSchemaResult () {
+    console.log('yo');
+    let ColorSchemaResult = []
+    let likeThreshold = 0.25;
+    let hateThreshold = 0.25;
+    let FAIL_SAFE = 0;
+    for (let i = 0; i < 8; i++) {
+      let colors = randomColor({ count: 4 });
+      let fC = chroma(colors[0]).rgb()
+      let sC = chroma(colors[1]).rgb()
+      let tC = chroma(colors[2]).rgb()
+      let foC = chroma(colors[3]).rgb()
+      while (
+        FAIL_SAFE < 10000 &&
+        (this.state.net.run(colorNetwork(fC)).like < likeThreshold ||
+        this.state.net.run(colorNetwork(sC)).like < likeThreshold ||
+        this.state.net.run(colorNetwork(tC)).like < likeThreshold ||
+        this.state.net.run(colorNetwork(foC)).like < likeThreshold) ||
+        (this.state.net.run(colorNetwork(fC)).hate > hateThreshold ||
+        this.state.net.run(colorNetwork(sC)).hate > hateThreshold ||
+        this.state.net.run(colorNetwork(tC)).hate > hateThreshold ||
+        this.state.net.run(colorNetwork(foC)).hate > hateThreshold)
+      ) {
+        let tryColors = randomColor({ count: 4 });
+        fC = chroma(tryColors[0]).rgb();
+        sC = chroma(tryColors[1]).rgb();
+        tC = chroma(tryColors[2]).rgb();
+        foC = chroma(tryColors[3]).rgb();
+        FAIL_SAFE++;
+        console.log(FAIL_SAFE, '/10000');
+      }
+      if (FAIL_SAFE >= 20000) {
+        this.show("😱 出了狀況重整網頁再來一次, refresh the page and do it again!", "custom", -1, failStyle);
+        return;
+      }
+      ColorSchemaResult.push({
+        firstColor: chroma(fC).hex(),
+        secondColor: chroma(sC).hex(),
+        thirdColor: chroma(tC).hex(),
+        fourColor: chroma(foC).hex(),
+        firstColorResult: this.state.net.run(colorNetwork(fC)),
+        secondColorResult: this.state.net.run(colorNetwork(sC)),
+        thirdColorResult: this.state.net.run(colorNetwork(tC)),
+        fourColorResult: this.state.net.run(colorNetwork(foC)),
+      })
+    }
+    this.setState({
+      colorSchemaResult: ColorSchemaResult,
+      showLikeHate: false,
+      showGradient: false,
+      showColorSchema: true
+    })
+  }
   render() {
+    console.log(this.state)
     return (
       <div className="App">
         <Notifications />
@@ -195,6 +258,9 @@ class App extends Component {
                 <button type="button" onClick={this.GradientResult.bind(this)}>
                   <p><span role="img" aria-label="gradient">🔷</span> Gradient</p>
                 </button>
+                <button type="button" onClick={this.colorSchemaResult.bind(this)}>
+                  <p><span role="img" aria-label="colorSchema">🌈</span> colorSchema</p>
+                </button>
             </div>
             <ResultCellList>
               {
@@ -230,6 +296,27 @@ class App extends Component {
                       <p><span role="img" aria-label="second">✌️</span> color: {cell.secondColor}</p>
                     </div>
                   </GradientCell>
+                ) : null
+              }
+            </ResultCellList>
+            <ResultCellList>
+              {
+                this.state.showColorSchema
+                ? _.map(this.state.colorSchemaResult, (cell, id) =>
+                  <ColorSchemaCell
+                    key={id}
+                    bgColorFirst={cell.firstColor}
+                    bgColorSecond={cell.secondColor}
+                    bgColorThird={cell.thirdColor}
+                    bgColorFour={cell.fourColor}
+                  >
+                    <div>
+                      <p><span role="img" aria-label="first">1️⃣</span> : {cell.firstColor}</p>
+                      <p><span role="img" aria-label="second">2️⃣</span> : {cell.secondColor}</p>
+                      <p><span role="img" aria-label="third">3️⃣</span> : {cell.thirdColor}</p>
+                      <p><span role="img" aria-label="four">4️⃣</span> : {cell.fourColor}</p>
+                    </div>
+                  </ColorSchemaCell>
                 ) : null
               }
             </ResultCellList>

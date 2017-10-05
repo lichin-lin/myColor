@@ -125,6 +125,45 @@ export const MyColorHeader = styled.div`
     }
   }
 `
+
+export const ColorSchemaCell = styled.div`
+  border-radius: 5px;
+  width: calc(${_DESKTOP} / 4 - 2 * ${_OFFSET});
+  height: calc((${_DESKTOP} / 4 - ${_OFFSET}) * 4 / 3);
+  padding: ${_OFFSET};
+  margin: calc(${_OFFSET});
+  background: linear-gradient(
+                ${props => props.bgColorFirst ? props.bgColorFirst : 'grey'} 0%,
+                ${props => props.bgColorFirst ? props.bgColorFirst : 'grey'} 25%,
+                ${props => props.bgColorSecond ? props.bgColorSecond : 'grey'} 25%,
+                ${props => props.bgColorSecond ? props.bgColorSecond : 'grey'} 50%,
+                ${props => props.bgColorThird ? props.bgColorThird : 'grey'} 50%,
+                ${props => props.bgColorThird ? props.bgColorThird : 'grey'} 75%,
+                ${props => props.bgColorFour ? props.bgColorFour : 'grey'} 75%,
+                ${props => props.bgColorFour ? props.bgColorFour : 'grey'});
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  > div {
+    border-radius: 5px;
+    width: 90%;
+    height: auto;
+    padding: 5px;
+    background: rgba(255, 255, 255, 0.5);
+    color: #50514F;
+    > p {
+      font-size: 15px;
+      font-weight: bold;
+      margin: 2.5px 0;
+    }
+  }
+  @media screen and (max-width: 768px) {
+    width: calc(${_WIDTH} / 2 - ${_OFFSET});
+    height: calc((${_WIDTH} / 2 - ${_OFFSET}) * 4 / 3);
+  }
+`
+
 export const passStyle = { background: '#CCC', text: "#646464" };
 export const successStyle = { background: '#0AF', text: "#FFFFFF" };
 export const failStyle = { background: 'tomato', text: "#FFFFFF" };
